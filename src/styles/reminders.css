@@ -1,0 +1,174 @@
+/* src/styles/reminders.css */
+
+.reminders-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.add-reminder-card {
+  padding: 22px 24px;
+}
+
+.add-reminder-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+.reminders-list-card {
+  padding: 22px 24px;
+}
+
+.reminders-list-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.reminder-item:last-child {
+  border-bottom: none;
+}
+
+.reminder-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  margin-top: 2px;
+}
+
+.reminder-check.done {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.reminder-check.done::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.reminder-company {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+
+.reminder-message {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.reminder-message.done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.reminder-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.reminder-date.overdue {
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.reminder-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.reminder-delete:hover {
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+.no-reminders {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Added: success banner, email notice, email-sent badge ─── */
+
+.reminder-success-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.reminder-email-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.reminder-email-sent-badge {
+  display: inline-block;
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  margin-top: 4px;
+}
+
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 5px;
+}

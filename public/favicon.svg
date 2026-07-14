@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2c5f2e"/>
+      <stop offset="1" stop-color="#1f4620"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="64" height="64" rx="16" fill="url(#bg)"/>
+
+  <!-- "T" monogram, serif style to match the Trackify wordmark -->
+  <text x="32" y="46" font-family="Georgia, 'Times New Roman', serif" font-size="38"
+        font-weight="700" fill="#f7f6f3" text-anchor="middle">T</text>
+
+  <!-- small upward tick accent, representing progress tracking -->
+  <path d="M16 40 L24 32 L30 37 L48 20" stroke="#7fc47f" stroke-width="3.2"
+        stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9"/>
+  <circle cx="48" cy="20" r="3" fill="#7fc47f"/>
+</svg>
