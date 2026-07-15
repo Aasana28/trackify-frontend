@@ -32,7 +32,13 @@ const MoonIcon = () => (
   </svg>
 );
 
-export default function Navbar() {
+const MenuIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+);
+
+export default function Navbar({ onMenuClick }) {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const page = PAGE_TITLES[location.pathname] || { title: "JTS", sub: "" };
@@ -44,8 +50,13 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-left">
-        <span className="navbar-page-title">{page.title}</span>
-        <span className="navbar-breadcrumb">{page.sub}</span>
+        <button className="menu-toggle-btn" onClick={onMenuClick} aria-label="Open menu">
+          <MenuIcon />
+        </button>
+        <div className="navbar-titles">
+          <span className="navbar-page-title">{page.title}</span>
+          <span className="navbar-breadcrumb">{page.sub}</span>
+        </div>
       </div>
       <div className="navbar-right">
         <span className="navbar-date">{today}</span>

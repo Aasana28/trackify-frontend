@@ -188,3 +188,20 @@
   color: var(--text-secondary);
   min-width: 200px;
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 900px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}

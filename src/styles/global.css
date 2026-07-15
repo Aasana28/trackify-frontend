@@ -235,3 +235,28 @@ input, select, textarea {
   background: var(--border);
   border-radius: 4px;
 }
+
+/* ─── Mobile Responsive ─── */
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-wrapper {
+    padding: 16px !important;
+  }
+}

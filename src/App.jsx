@@ -33,11 +33,21 @@ function mapApplicationFromApi(app) {
 
 // ─── Layout shell (always shown when logged in) ──────────────────────────────
 function AppLayout({ children, user, onLogout }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="app-layout">
-      <Sidebar user={user} onLogout={onLogout} />
+      <Sidebar
+        user={user}
+        onLogout={onLogout}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
       <div className="main-content">
-        <Navbar />
+        <Navbar onMenuClick={() => setSidebarOpen(true)} />
         {children}
       </div>
     </div>

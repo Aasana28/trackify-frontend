@@ -79,3 +79,17 @@
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

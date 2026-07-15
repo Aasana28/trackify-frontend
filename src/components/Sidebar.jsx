@@ -58,6 +58,11 @@ const Icon = {
       <polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/>
     </svg>
   ),
+  Close: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  ),
 };
 
 const NAV_ITEMS = [
@@ -72,14 +77,22 @@ const TOOLS_ITEMS = [
   { path: "/mock-interview",  label: "Mock Interview",       icon: Icon.MockInterview },
 ];
 
-export default function Sidebar({ user, onLogout }) {
+export default function Sidebar({ user, onLogout, isOpen, onClose }) {
   const navigate = useNavigate();
 
+  const handleNavClick = () => {
+    // Auto-close the sidebar on mobile after picking a page
+    if (onClose) onClose();
+  };
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? " open" : ""}`}>
       <div className="sidebar-brand">
         <h1>JTS</h1>
         <span>Job Tracking System</span>
+        <button className="sidebar-close-btn" onClick={onClose} aria-label="Close menu">
+          <Icon.Close />
+        </button>
       </div>
 
       <nav className="sidebar-nav">
@@ -88,6 +101,7 @@ export default function Sidebar({ user, onLogout }) {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={handleNavClick}
             className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
           >
             <item.icon />
@@ -100,6 +114,7 @@ export default function Sidebar({ user, onLogout }) {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={handleNavClick}
             className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
           >
             <item.icon />
@@ -110,6 +125,7 @@ export default function Sidebar({ user, onLogout }) {
         <div className="nav-section-label" style={{ marginTop: 8 }}>Account</div>
         <NavLink
           to="/settings"
+          onClick={handleNavClick}
           className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
         >
           <Icon.Settings />
