@@ -172,3 +172,10 @@
   color: var(--text-muted);
   margin-top: 5px;
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 900px) {
+  .reminders-layout {
+    grid-template-columns: 1fr;
+  }
+}

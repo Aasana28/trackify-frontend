@@ -178,3 +178,24 @@
 .empty-state p {
   font-size: 0.88rem;
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 900px) {
+  .applications-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .applications-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .applications-table {
+    min-width: 640px;
+  }
+}

@@ -310,3 +310,11 @@
   margin-bottom: 24px;
   font-size: 0.92rem;
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 900px) {
+  .braindump-layout,
+  .mock-layout {
+    grid-template-columns: 1fr;
+  }
+}
