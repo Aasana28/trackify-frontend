@@ -179,7 +179,7 @@ export default function LoginPage({ onLogin, onRegister }) {
               <div className="password-field-wrapper">
                 <input className="form-control" type={showPassword ? "text" : "password"} placeholder="Enter your password"
                   value={password} onChange={e => { setPassword(e.target.value); clear(); }} />
-                <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(v => venv\Scriptsctivate)} aria-label="Toggle password visibility">
+                <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password visibility">
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
@@ -242,7 +242,7 @@ export default function LoginPage({ onLogin, onRegister }) {
               <div className="password-field-wrapper">
                 <input className="form-control" type={showPassword ? "text" : "password"} placeholder="At least 6 characters"
                   value={password} onChange={e => { setPassword(e.target.value); clear(); }} />
-                <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(v => venv\Scriptsctivate)} aria-label="Toggle password visibility">
+                <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password visibility">
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
@@ -339,7 +339,7 @@ export default function LoginPage({ onLogin, onRegister }) {
               <div className="password-field-wrapper">
                 <input className="form-control" type={showNewPassword ? "text" : "password"} placeholder="At least 6 characters"
                   value={newPass} onChange={e => { setNewPass(e.target.value); clear(); }} />
-                <button type="button" className="password-toggle-btn" onClick={() => setShowNewPassword(v => venv\Scriptsctivate)} aria-label="Toggle password visibility">
+                <button type="button" className="password-toggle-btn" onClick={() => setShowNewPassword(v => !v)} aria-label="Toggle password visibility">
                   {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
