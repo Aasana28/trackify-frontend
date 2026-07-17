@@ -100,6 +100,9 @@
     background: var(--bg-hover);
   }
 
+  .navbar-titles {
+    display: none;
+  }
   .navbar {
     padding: 0 16px;
   }

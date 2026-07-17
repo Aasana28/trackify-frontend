@@ -168,11 +168,11 @@ export default function ApplicationsPage({ applications, onAdd, onEdit, onDelete
                   <div className="company-name">{app.company}</div>
                   <div className="role-name">{app.role}</div>
                 </td>
-                <td className="salary-cell">{app.location || "-"}</td>
-                <td className="salary-cell">{app.salary || "-"}</td>
-                <td><StatusBadge status={app.status} full /></td>
-                <td className="date-cell">{app.appliedDate || "-"}</td>
-                <td className="date-cell" style={{ color: app.followUpDate ? "var(--warning)" : "var(--text-muted)" }}>
+                <td className="salary-cell" data-label="Location">{app.location || "-"}</td>
+                <td className="salary-cell" data-label="Salary">{app.salary || "-"}</td>
+                <td data-label="Status"><StatusBadge status={app.status} full /></td>
+                <td className="date-cell" data-label="Applied">{app.appliedDate || "-"}</td>
+                <td className="date-cell" data-label="Follow-up" style={{ color: app.followUpDate ? "var(--warning)" : "var(--text-muted)" }}>
                   {app.followUpDate || "-"}
                 </td>
                 <td>
