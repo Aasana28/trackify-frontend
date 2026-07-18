@@ -175,6 +175,9 @@ export default function App() {
 
   async function handleEditApplication(updated) {
     try {
+      const prevApp = applications.find(a => a.id === updated.id);
+      const statusChanged = prevApp && prevApp.status !== updated.status;
+
       const saved = await applicationsAPI.update(updated.id, {
         company: updated.company, role: updated.role, location: updated.location,
         salary: updated.salary, status: updated.status,
@@ -184,6 +187,18 @@ export default function App() {
       });
       const mapped = mapApplicationFromApi(saved);
       setApplications(prev => prev.map(a => a.id === mapped.id ? mapped : a));
+
+      if (statusChanged) {
+        try {
+          const newEntry = await applicationsAPI.addTimeline(updated.id, {
+            stage: updated.status,
+            date: new Date().toISOString().slice(0, 10),
+          });
+          setApplications(prev => prev.map(a =>
+            a.id === updated.id ? { ...a, timeline: [...(a.timeline || []), newEntry] } : a
+          ));
+        } catch (e) { /* non-critical, ignore */ }
+      }
     } catch (err) { alert("Failed to update: " + err.message); }
   }
 
