@@ -194,6 +194,14 @@ export default function App() {
       setApplications(prev => prev.filter(a => a.id !== id));
     } catch (err) { alert("Failed to delete: " + err.message); }
   }
+  async function handleAddTimelineStage(appId, data) {
+    try {
+      const newEntry = await applicationsAPI.addTimeline(appId, data);
+      setApplications(prev => prev.map(a =>
+        a.id === appId ? { ...a, timeline: [...(a.timeline || []), newEntry] } : a
+      ));
+    } catch (err) { alert("Failed to add stage: " + err.message); }
+  }
 
   // ── Reminder CRUD (now includes remind_time) ──────────────────────────────
   async function handleAddReminder(r) {
@@ -263,7 +271,7 @@ export default function App() {
                 onDelete={handleDeleteApplication}
               />
             } />
-            <Route path="/timeline"       element={<TimelinePage applications={applications} />} />
+            <Route path="/timeline"       element={<TimelinePage applications={applications} onAddStage={handleAddTimelineStage} />} />
             <Route path="/reminders"      element={
               <RemindersPage
                 reminders={reminders}

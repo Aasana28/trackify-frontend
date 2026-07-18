@@ -15,9 +15,21 @@ const PDFIcon = () => (
   </svg>
 );
 
-export default function TimelinePage({ applications }) {
+export default function TimelinePage({ applications, onAddStage }) {
   const [selectedId, setSelectedId] = useState(applications[0]?.id || null);
   const app = applications.find(a => a.id === selectedId);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [stageName, setStageName] = useState("Interview Scheduled");
+  const [stageDate, setStageDate] = useState(new Date().toISOString().slice(0, 10));
+  const [stageNote, setStageNote] = useState("");
+
+  function submitStage(e) {
+    e.preventDefault();
+    if (!app || !onAddStage) return;
+    onAddStage(app.id, { stage: stageName, date: stageDate, note: stageNote });
+    setStageNote("");
+    setShowAddForm(false);
+  }
 
   // ─── Export single application PDF ───
   function exportSinglePDF() {
@@ -112,6 +124,41 @@ export default function TimelinePage({ applications }) {
               ))}
               {(!app.timeline || app.timeline.length === 0) && (
                 <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>No timeline stages recorded yet.</p>
+              )}
+            </div>
+
+            {/* Add Stage form */}
+            <div style={{ marginTop: 20 }}>
+              {!showAddForm ? (
+                <button className="btn btn-primary" onClick={() => setShowAddForm(true)}>
+                  + Add Stage
+                </button>
+              ) : (
+                <form onSubmit={submitStage} className="card" style={{ padding: 16, background: "var(--bg-hover)", marginTop: 4 }}>
+                  <div className="form-group">
+                    <label>Stage</label>
+                    <select className="form-control" value={stageName} onChange={e => setStageName(e.target.value)}>
+                      <option>Applied</option>
+                      <option>Interview Scheduled</option>
+                      <option>Interview Completed</option>
+                      <option>Offer Received</option>
+                      <option>Rejected</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Date</label>
+                    <input type="date" className="form-control" value={stageDate} onChange={e => setStageDate(e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>Note (optional)</label>
+                    <input type="text" className="form-control" placeholder="e.g. HR round scheduled"
+                      value={stageNote} onChange={e => setStageNote(e.target.value)} />
+                  </div>
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <button type="submit" className="btn btn-primary">Save Stage</button>
+                    <button type="button" className="btn btn-ghost" onClick={() => setShowAddForm(false)}>Cancel</button>
+                  </div>
+                </form>
               )}
             </div>
 
