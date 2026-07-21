@@ -44,7 +44,7 @@ function Alert({ type, msg }) {
   );
 }
 
-export default function SettingsPage({ user, applications, activity }) {
+export default function SettingsPage({ user, applications, activity, onLogout, onUserUpdate }) {
   const { theme, toggleTheme } = useTheme();
 
   // ── Change-password state ─────────────────────────────────────────────────
@@ -78,6 +78,58 @@ export default function SettingsPage({ user, applications, activity }) {
       setPwError(err.message || "Failed to change password.");
     }
     setPwLoading(false);
+  }
+
+  // ── Change-email state ────────────────────────────────────────────────────
+  const [emailForm, setEmailForm]   = useState({ newEmail: "", password: "" });
+  const [emailError, setEmailError] = useState("");
+  const [emailOk, setEmailOk]       = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+
+  function handleEmailFormChange(e) {
+    setEmailError(""); setEmailOk("");
+    setEmailForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleChangeEmail(e) {
+    e.preventDefault();
+    if (!emailForm.newEmail || !emailForm.password) {
+      setEmailError("Please fill in both fields."); return;
+    }
+    setEmailLoading(true);
+    try {
+      const res = await authAPI.changeEmail(emailForm.newEmail, emailForm.password);
+      setEmailOk(res.message || "Email changed successfully.");
+      setEmailForm({ newEmail: "", password: "" });
+      if (onUserUpdate) onUserUpdate({ email: res.email });
+    } catch (err) {
+      setEmailError(err.message || "Failed to change email.");
+    }
+    setEmailLoading(false);
+  }
+
+  // ── Delete-account state ───────────────────────────────────────────────────
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError]       = useState("");
+  const [deleteLoading, setDeleteLoading]   = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  async function handleDeleteAccount(e) {
+    e.preventDefault();
+    setDeleteError("");
+    const confirmed = window.confirm(
+      "This will permanently delete your account and all your data. This cannot be undone. Continue?"
+    );
+    if (!confirmed) return;
+
+    setDeleteLoading(true);
+    try {
+      await authAPI.deleteAccount(deletePassword);
+      if (onLogout) onLogout();
+    } catch (err) {
+      setDeleteError(err.message || "Failed to delete account.");
+      setDeleteLoading(false);
+    }
   }
 
   // ── Activity data ─────────────────────────────────────────────────────────
@@ -175,6 +227,46 @@ export default function SettingsPage({ user, applications, activity }) {
         </form>
       </Section>
 
+      {/* ── Change Email ── */}
+      <Section title="Change Email">
+        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: 18, lineHeight: 1.6 }}>
+          Update the email address linked to your account. You'll receive a confirmation email at your old address.
+        </p>
+
+        <Alert type="success" msg={emailOk} />
+        <Alert type="error"   msg={emailError} />
+
+        <form onSubmit={handleChangeEmail} style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 420 }}>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>New Email</label>
+            <input
+              className="form-control"
+              type="email"
+              name="newEmail"
+              value={emailForm.newEmail}
+              onChange={handleEmailFormChange}
+              placeholder="new-email@example.com"
+            />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Current Password</label>
+            <input
+              className="form-control"
+              type="password"
+              name="password"
+              value={emailForm.password}
+              onChange={handleEmailFormChange}
+              placeholder="Confirm with your password"
+            />
+          </div>
+          <div>
+            <button type="submit" className="btn btn-primary" disabled={emailLoading} style={{ minWidth: 160 }}>
+              {emailLoading ? "Updating…" : "Update Email"}
+            </button>
+          </div>
+        </form>
+      </Section>
+
       {/* ── Today's Activity ── */}
       <Section title="Today's Activity">
         {today ? (
@@ -248,6 +340,55 @@ export default function SettingsPage({ user, applications, activity }) {
         <p style={{ fontSize: "0.83rem", color: "var(--text-secondary)" }}>
           All your data is securely stored in PostgreSQL and synced across sessions.
         </p>
+      </Section>
+
+      {/* ── Danger Zone ── */}
+      <Section title="Danger Zone">
+        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: 18, lineHeight: 1.6 }}>
+          Deleting your account is permanent and removes all your applications, reminders, and activity data.
+        </p>
+
+        <Alert type="error" msg={deleteError} />
+
+        {!showDeleteConfirm ? (
+          <button
+            className="btn"
+            style={{ background: "var(--danger)", color: "#fff", border: "none" }}
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            Delete Account
+          </button>
+        ) : (
+          <form onSubmit={handleDeleteAccount} style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 420 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label>Enter your password to confirm</label>
+              <input
+                className="form-control"
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="Your password"
+              />
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                type="submit"
+                className="btn"
+                style={{ background: "var(--danger)", color: "#fff", border: "none", minWidth: 160 }}
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? "Deleting…" : "Confirm Delete"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => { setShowDeleteConfirm(false); setDeleteError(""); }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </Section>
     </div>
   );

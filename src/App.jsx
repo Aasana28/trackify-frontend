@@ -158,6 +158,11 @@ export default function App() {
     setDumps([]);
     setActivity(null);
   }
+  function handleUserUpdate(updatedFields) {
+    const updated = { ...user, ...updatedFields };
+    localStorage.setItem("jts_user", JSON.stringify(updated));
+    setUser(updated);
+  }
 
   // ── Application CRUD ──────────────────────────────────────────────────────
   async function handleAddApplication(form) {
@@ -298,7 +303,7 @@ export default function App() {
             } />
             <Route path="/brain-dump"     element={<BrainDumpPage applications={applications} dumps={dumps} onSaveDump={handleSaveDump} />} />
             <Route path="/mock-interview" element={<MockInterviewPage applications={applications} />} />
-            <Route path="/settings"       element={<SettingsPage user={user} applications={applications} activity={activity} />} />
+            <Route path="/settings"       element={<SettingsPage user={user} applications={applications} activity={activity} onLogout={handleLogout} onUserUpdate={handleUserUpdate} />} />
             <Route path="*"               element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </AppLayout>

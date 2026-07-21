@@ -59,6 +59,12 @@ export const authAPI = {
   changePassword: (current_password, new_password) =>
     request("POST", "/auth/change-password/", { current_password, new_password }),
 
+  changeEmail: (new_email, current_password) =>
+    request("POST", "/auth/change-email/", { new_email, current_password }),
+
+  deleteAccount: (password) =>
+    request("POST", "/auth/delete-account/", { password }),
+
   // Activity Tracking
   getActivity: () =>
     request("GET", "/auth/activity/"),
