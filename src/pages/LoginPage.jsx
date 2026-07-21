@@ -27,6 +27,8 @@ export default function LoginPage({ onLogin, onRegister }) {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [name, setName]         = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPass, setNewPass]   = useState("");
   const [resetToken, setResetToken] = useState("");
   const [error, setError]       = useState("");
@@ -68,8 +70,16 @@ export default function LoginPage({ onLogin, onRegister }) {
   // ── Register ───────────────────────────────────────────────────────────
   async function handleRegister(e) {
     e.preventDefault();
-    if (!email.trim() || !name.trim() || !password.trim()) {
+    if (!email.trim() || !name.trim() || !password.trim() || !confirmPassword.trim()) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
     setLoading(true); clear();
@@ -244,6 +254,16 @@ export default function LoginPage({ onLogin, onRegister }) {
                   value={password} onChange={e => { setPassword(e.target.value); clear(); }} />
                 <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password visibility">
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label>Confirm Password</label>
+              <div className="password-field-wrapper">
+                <input className="form-control" type={showConfirmPassword ? "text" : "password"} placeholder="Re-enter your password"
+                  value={confirmPassword} onChange={e => { setConfirmPassword(e.target.value); clear(); }} />
+                <button type="button" className="password-toggle-btn" onClick={() => setShowConfirmPassword(v => !v)} aria-label="Toggle confirm password visibility">
+                  {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
             </div>
