@@ -16,50 +16,59 @@ function Spinner() {
   );
 }
 
+const COACHING_SECTIONS = [
+  { key: "Key Strength",        icon: "💪", color: "var(--success)",  bg: "var(--success-light)" },
+  { key: "Main Improvement",    icon: "🎯", color: "var(--warning)",  bg: "var(--warning-light)" },
+  { key: "Action for Tomorrow", icon: "📅", color: "var(--accent)",   bg: "var(--accent-light)"  },
+  { key: "Encouragement",       icon: "✨", color: "var(--info)",     bg: "var(--info-light)"    },
+];
+
+function extractCoachingSection(text, label) {
+  const regex = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=(Key Strength:|Main Improvement:|Action for Tomorrow:|Encouragement:|$))`, "i");
+  const match = text.match(regex);
+  return match ? match[1].trim() : "";
+}
+
+function CoachingSections({ coaching, compact }) {
+  if (!coaching) return null;
+  const hasAnySection = COACHING_SECTIONS.some(({ key }) => extractCoachingSection(coaching, key));
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: compact ? 8 : 12 }}>
+      {hasAnySection ? COACHING_SECTIONS.map(({ key, icon, color, bg }) => {
+        const content = extractCoachingSection(coaching, key);
+        if (!content) return null;
+        return (
+          <div key={key} style={{ background: bg, border: `1px solid ${color}`, borderRadius: 8, padding: compact ? "10px 12px" : "12px 14px" }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 5 }}>
+              {icon} {key}
+            </div>
+            <div style={{ fontSize: "0.85rem", color: "var(--text-primary)", lineHeight: 1.6 }}>{content}</div>
+          </div>
+        );
+      }) : (
+        <div style={{ fontSize: "0.85rem", color: "var(--text-primary)", lineHeight: 1.65, whiteSpace: "pre-line" }}>{coaching}</div>
+      )}
+    </div>
+  );
+}
+
 function CoachingPanel({ coaching, onDismiss }) {
   if (!coaching) return null;
-
-  const sections = [
-    { key: "Key Strength",        icon: "💪", color: "var(--success)",  bg: "var(--success-light)" },
-    { key: "Main Improvement",    icon: "🎯", color: "var(--warning)",  bg: "var(--warning-light)" },
-    { key: "Action for Tomorrow", icon: "📅", color: "var(--accent)",   bg: "var(--accent-light)"  },
-    { key: "Encouragement",       icon: "✨", color: "var(--info)",     bg: "var(--info-light)"    },
-  ];
-
-  function extract(text, label) {
-    const regex = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=(Key Strength:|Main Improvement:|Action for Tomorrow:|Encouragement:|$))`, "i");
-    const match = text.match(regex);
-    return match ? match[1].trim() : "";
-  }
-
   return (
     <div style={{ marginTop: 20, border: "1px solid var(--accent)", borderRadius: 10, overflow: "hidden" }}>
       <div style={{ background: "var(--accent)", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem" }}>🤖 AI Coaching Analysis</div>
         <button onClick={onDismiss} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: "1.1rem" }}>×</button>
       </div>
-      <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 12, background: "var(--bg-card)" }}>
-        {sections.map(({ key, icon, color, bg }) => {
-          const content = extract(coaching, key);
-          if (!content) return null;
-          return (
-            <div key={key} style={{ background: bg, border: `1px solid ${color}`, borderRadius: 8, padding: "12px 14px" }}>
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
-                {icon} {key}
-              </div>
-              <div style={{ fontSize: "0.88rem", color: "var(--text-primary)", lineHeight: 1.65 }}>{content}</div>
-            </div>
-          );
-        })}
-        {sections.every(({ key }) => !extract(coaching, key)) && (
-          <div style={{ fontSize: "0.88rem", color: "var(--text-primary)", lineHeight: 1.7 }}>{coaching}</div>
-        )}
+      <div style={{ padding: 16, background: "var(--bg-card)" }}>
+        <CoachingSections coaching={coaching} />
       </div>
     </div>
   );
 }
 
-export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
+export default function BrainDumpPage({ applications, dumps, onSaveDump, onDeleteDump }) {
   const [form, setForm]           = useState(EMPTY_FORM);
   const [saved, setSaved]         = useState(false);
   const [coaching, setCoaching]   = useState("");
@@ -213,6 +222,19 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div className="dump-date">{d.date}</div>
+                    <button
+                      className="btn-icon-danger"
+                      title="Delete reflection"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm("Delete this reflection? This cannot be undone.")) {
+                          onDeleteDump && onDeleteDump(d.id);
+                        }
+                      }}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: "var(--danger)", fontSize: "0.95rem", padding: 2 }}
+                    >
+                      🗑
+                    </button>
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{isOpen ? "▲" : "▼"}</span>
                   </div>
                 </div>
@@ -238,9 +260,9 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
                       </div>
                     )}
                     {(d.ai_feedback || d.aiFeedback) && (
-                      <div className="dump-section" style={{ background: "var(--accent-light)", borderRadius: 8, padding: "10px 12px", marginTop: 8 }}>
-                        <div className="dump-section-label">🤖 AI Coaching</div>
-                        <div className="dump-section-text" style={{ whiteSpace: "pre-line" }}>{d.ai_feedback || d.aiFeedback}</div>
+                      <div style={{ marginTop: 12 }}>
+                        <div className="dump-section-label" style={{ marginBottom: 8 }}>🤖 AI Coaching</div>
+                        <CoachingSections coaching={d.ai_feedback || d.aiFeedback} compact />
                       </div>
                     )}
                   </>
