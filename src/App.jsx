@@ -259,6 +259,7 @@ export default function App() {
         application: dump.applicationId || null,
         company: dump.company, role: dump.role,
         went_well: dump.wentWell, struggled: dump.struggled, next_time: dump.nextTime,
+        ai_feedback: dump.aiFeedback || "",
       });
       setDumps(prev => [saved, ...prev]);
     } catch (err) { alert("Failed to save: " + err.message); }

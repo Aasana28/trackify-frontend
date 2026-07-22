@@ -65,6 +65,7 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
   const [coaching, setCoaching]   = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError]     = useState("");
+  const [expandedId, setExpandedId] = useState(null);
 
   function handleChange(e) {
     setSaved(false); setCoaching(""); setAiError("");
@@ -84,6 +85,7 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
       wentWell:  form.wentWell,
       struggled: form.struggled,
       nextTime:  form.nextTime,
+      aiFeedback: coaching || "",
     });
     setSaved(true);
     setForm(EMPTY_FORM);
@@ -196,36 +198,56 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump }) {
             <div style={{ textAlign: "center", padding: "40px 20px", color: "var(--text-muted)", fontSize: "0.88rem" }}>
               No reflections yet. Save your first one!
             </div>
-          ) : [...dumps].map((d, i) => (
-            <div className="dump-entry" key={d.id || i}>
-              <div className="dump-entry-header">
-                <div>
-                  <div className="dump-company">{d.company}</div>
-                  <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: 2 }}>{d.role}</div>
+          ) : [...dumps].map((d, i) => {
+            const isOpen = expandedId === (d.id || i);
+            return (
+              <div className="dump-entry" key={d.id || i}>
+                <div
+                  className="dump-entry-header"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setExpandedId(isOpen ? null : (d.id || i))}
+                >
+                  <div>
+                    <div className="dump-company">{d.company}</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: 2 }}>{d.role}</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div className="dump-date">{d.date}</div>
+                    <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{isOpen ? "▲" : "▼"}</span>
+                  </div>
                 </div>
-                <div className="dump-date">{d.date}</div>
+
+                {isOpen && (
+                  <>
+                    {(d.went_well || d.wentWell) && (
+                      <div className="dump-section">
+                        <div className="dump-section-label">Went Well</div>
+                        <div className="dump-section-text">{d.went_well || d.wentWell}</div>
+                      </div>
+                    )}
+                    {(d.struggled) && (
+                      <div className="dump-section">
+                        <div className="dump-section-label">Struggled With</div>
+                        <div className="dump-section-text">{d.struggled}</div>
+                      </div>
+                    )}
+                    {(d.next_time || d.nextTime) && (
+                      <div className="dump-section">
+                        <div className="dump-section-label">Next Time</div>
+                        <div className="dump-section-text">{d.next_time || d.nextTime}</div>
+                      </div>
+                    )}
+                    {(d.ai_feedback || d.aiFeedback) && (
+                      <div className="dump-section" style={{ background: "var(--accent-light)", borderRadius: 8, padding: "10px 12px", marginTop: 8 }}>
+                        <div className="dump-section-label">🤖 AI Coaching</div>
+                        <div className="dump-section-text" style={{ whiteSpace: "pre-line" }}>{d.ai_feedback || d.aiFeedback}</div>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
-              {/* Backend returns went_well, struggled, next_time */}
-              {(d.went_well || d.wentWell) && (
-                <div className="dump-section">
-                  <div className="dump-section-label">Went Well</div>
-                  <div className="dump-section-text">{d.went_well || d.wentWell}</div>
-                </div>
-              )}
-              {(d.struggled) && (
-                <div className="dump-section">
-                  <div className="dump-section-label">Struggled With</div>
-                  <div className="dump-section-text">{d.struggled}</div>
-                </div>
-              )}
-              {(d.next_time || d.nextTime) && (
-                <div className="dump-section">
-                  <div className="dump-section-label">Next Time</div>
-                  <div className="dump-section-text">{d.next_time || d.nextTime}</div>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
