@@ -16,6 +16,14 @@ function Spinner() {
   );
 }
 
+const TrashIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/>
+    <path d="M10,11v6"/><path d="M14,11v6"/>
+    <path d="M9,6V4h6v2"/>
+  </svg>
+);
+
 const COACHING_SECTIONS = [
   { key: "Key Strength",        icon: "💪", color: "var(--success)",  bg: "var(--success-light)" },
   { key: "Main Improvement",    icon: "🎯", color: "var(--warning)",  bg: "var(--warning-light)" },
@@ -223,17 +231,16 @@ export default function BrainDumpPage({ applications, dumps, onSaveDump, onDelet
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div className="dump-date">{d.date}</div>
                     <button
-                      className="btn-icon-danger"
-                      title="Delete reflection"
+                      className="icon-btn danger"
+                      title="Delete"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (window.confirm("Delete this reflection? This cannot be undone.")) {
                           onDeleteDump && onDeleteDump(d.id);
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", color: "var(--danger)", fontSize: "0.95rem", padding: 2 }}
                     >
-                      🗑
+                      <TrashIcon />
                     </button>
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{isOpen ? "▲" : "▼"}</span>
                   </div>
