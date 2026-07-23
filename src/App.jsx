@@ -265,6 +265,13 @@ export default function App() {
     } catch (err) { alert("Failed to save: " + err.message); }
   }
 
+  async function handleDeleteDump(id) {
+    try {
+      await brainDumpAPI.delete(id);
+      setDumps(prev => prev.filter(d => d.id !== id));
+    } catch (err) { alert("Failed to delete: " + err.message); }
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
   if (loading) return <ThemeProvider><LoadingScreen /></ThemeProvider>;
 
@@ -302,7 +309,7 @@ export default function App() {
                 onDelete={handleDeleteReminder}
               />
             } />
-            <Route path="/brain-dump"     element={<BrainDumpPage applications={applications} dumps={dumps} onSaveDump={handleSaveDump} />} />
+            <Route path="/brain-dump"     element={<BrainDumpPage applications={applications} dumps={dumps} onSaveDump={handleSaveDump} onDeleteDump={handleDeleteDump} />} />
             <Route path="/mock-interview" element={<MockInterviewPage applications={applications} />} />
             <Route path="/settings"       element={<SettingsPage user={user} applications={applications} activity={activity} onLogout={handleLogout} onUserUpdate={handleUserUpdate} />} />
             <Route path="*"               element={<Navigate to="/dashboard" replace />} />
